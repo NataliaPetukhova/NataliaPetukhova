@@ -12,17 +12,17 @@ def permutations(n, prefix = []):
 
 
 # Problem 2
-def corr_bracket_seq(n):
+def correctbracketsequences(n):
     ps = set(['(' * n + ')' * n])
     for i in range(1, n):
-        for a in corr_bracket_seq(i):
-            for b in corr_bracket_seq(n-i):
+        for a in correctbracketsequences(i):
+            for b in correctbracketsequences(n-i):
                 ps.add(a + b)
     return ps
 
  
 # Problem 3
-def comb_repeats(n, k):
+def combinationswithrepeats(n, k):
     def generator(n, k, prefix = []):
         if len(prefix) == k:
             yield tuple(prefix)
@@ -34,7 +34,7 @@ def comb_repeats(n, k):
 
 
 # Problem 4
-def unord_part(n):
+def unorderedpartitions(n):
     def generator(n, prefix = []):
         if sum(prefix) == n:
             yield tuple(prefix)
@@ -45,5 +45,3 @@ def unord_part(n):
                 if sum(new_prefix) <= n:
                     yield from generator(n, prefix + [i])
     return list(generator(n))
-
->>> 
