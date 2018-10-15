@@ -18,7 +18,7 @@ def correctbracketsequences(n):
         for a in correctbracketsequences(i):
             for b in correctbracketsequences(n-i):
                 ps.add(a + b)
-    return ps
+    return list(ps)
 
  
 # Problem 3
