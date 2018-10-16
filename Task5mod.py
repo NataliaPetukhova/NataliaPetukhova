@@ -13,12 +13,16 @@ def permutations(n, prefix = []):
 
 # Problem 2
 def correctbracketsequences(n):
-    ps = set(['(' * n + ')' * n])
-    for i in range(1, n):
-        for a in correctbracketsequences(i):
-            for b in correctbracketsequences(n-i):
-                ps.add(a + b)
-    return list(ps)
+    def generator(n, prefix = '', balance = 0):
+        if len(prefix) == 2 * n and balance == 0:
+            yield prefix
+        else:
+            for i in ('(', ')'):
+                new_prefix = prefix + i
+                new_balance = balance + (1 if i == '(' else -1)
+                if len(new_prefix) <= 2 * n and new_balance >= 0:
+                    yield from generator(n, new_prefix, new_balance)
+    return list(generator(n))
 
  
 # Problem 3
