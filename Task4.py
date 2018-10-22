@@ -21,34 +21,54 @@ def recurrent(n):
         return 1
     if n % 2 == 0:
         return recurrent(n // 2)
-        print("yes")
     else:
         return recurrent((n-1) // 2 + 1) + recurrent((n-1) // 2)
 
 
 # Problem 4
 def digitsum(n) :
-    sum = 0
-    while (n != 0) : 
-        sum = sum + n % 10
-        n = n// 10 
-    return sum
+    if n // 10 == 0:
+        return n
+    else:
+        return n % 10 + digitsum(n // 10)
 
 
 # Problem 5
 def reversestring(s):
-    return s[::-1]
-
+    if len(s) <= 1:
+        return s
+    else:
+        return s[-1] + reversestring(s[0:-1])
 
 # Problem 6
 def ackermann(m, n):
     if m == 0:
         return n + 1
-    elif m > 0 and n == 0:
+    if n == 0:
         return ackermann(m - 1, 1)
-    elif m > 0 and n > 0:
-        return ackermann(m - 1, ack(m, n - 1))
+    return ackermann(m-1, ackermann(m, n - 1))
 
+
+# Problem 7
+def drawborders(n):
+    if n == 1:
+        return ['+']
+    elif n == 2:
+        return ['++',
+                '++']
+    else:
+        answ = [0 for x in range(n)]
+        answ[0] = '+'
+        for i in range(n - 2):
+            answ[0] += '-'
+        answ[0] += '+'
+        for i in range(1, n - 1):
+            answ[i] = '|' + drawborders(n - 2)[i - 1] + '|'
+        answ[n - 1] = '+'
+        for i in range(n - 2):
+            answ[n - 1] += '-'
+        answ[n - 1] += '+'
+        return answ
 
 # Problem 8
 def genbinarystrings(n):
@@ -64,18 +84,22 @@ def genbinarystrings(n):
 
 # Problem 9
 def istwopower(n):
-    if (n == 0):
-        return False
-    while (n != 1):
-        if (n % 2 != 0):
-            return False
-        n = n // 2
+    if n == 1:
         return True
+    elif n <= 0:
+        return False
+    elif n % 2 == 0:
+        return istwopower(n // 2)
+    return False
 
 
 # Problem 10
 def concatnumbers(a, b):
-    return a * (10 ** len(str(b))) + b
+   if b // 10 == 0:
+        return a*10 + b
+    else:
+        return concatnumbers(a * 10 + b // (10 ** (len(str(b)) - 1)),
+                             b % (10 ** (len(str(b)) - 1)))
 
 
 # Problem 11
@@ -128,6 +152,13 @@ def mergesort(a):
     result += x[i:]
     result += y[j:]
     return result
+
+
+
+
+
+
+
 
 
 
