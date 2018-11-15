@@ -1,6 +1,10 @@
 # Problem 1
 def valuesunion(*dicts):
-    return set().union(chain.from_iterable([x.values() for x in dicts]))
+    ans = set()
+    for d in dicts:
+        for el in d.values():
+            ans.add(el)
+    return ans
 
 
 # Problem 2
@@ -20,7 +24,17 @@ def subpalindrome1(s):
 
 # Problem 3
 def powers(n, m):
-    return dict([(i, i ** (i % m)) for i in range(1, n + 1)])
+    answ = {}
+
+    def power(n):
+        a = 1
+        for i in range(n):
+            a *= n
+        return a
+
+    for i in range(1, n+1):
+        answ[i] = power(i) % m
+    return answ
 
 
 # Problem 4
@@ -33,12 +47,13 @@ def popcount(n):
 
 
 # Problem 5
-def isipv4(ip):
+def isIPv4(ip):
     return re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip) != None
 
 
 # Problem 6
 from functools import reduce
-fib=lambda n:reduce(lambda x,y:(x[0]+x[1],x[0]),[(1,1)]*(n-2))[0]
 
+def fibonacci(n):
+   return functools.reduce(lambda x,n:(x[0]+x[1],x[0]),[(1,1)]*(n-2))[0]
 
