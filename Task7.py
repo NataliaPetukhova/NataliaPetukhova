@@ -8,7 +8,7 @@ def valuesunion(*dicts):
 
 
 # Problem 2
-def subpalindrome1(s):
+def subpalindrome(s):
     rev = s[::-1]
     l = len(s)
     while l > 0:
