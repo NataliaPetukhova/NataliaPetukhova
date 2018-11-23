@@ -12,18 +12,26 @@ def valuesunion(*dicts):
 
 
 # Problem 2
-def subpalindrome(s):
-    rev = s[::-1]
-    l = len(s)
-    while l > 0:
-        for i in range(0, len(s) - l + 1):
-            half = int(l / 2)
-            left = s[i: i + half]
-            right = rev[len(s) - (i + l): len(s) - (i + l - half)]
-            if left == right:
-                return s[i:i + l]
-        l -= 1
-    return None
+def subpalindrome(string):
+
+    def check(word):
+        if len(word) == 1:
+            return True
+        return all(word[i] == word[-1 * (i + 1)] for i in range(len(word) // 2))
+
+    subpal = ''
+    max = 0
+    for i in range(len(string)):
+        for j in range(i + 1, len(string) + 1):
+            if check(string[i:j]):
+                if j - i > max:
+                    subpal = string[i:j]
+                    max = j - i
+                elif j - i == max:
+                    if string[i:j] < subpal:
+                        subpal = string[i:j]
+
+    return subpal
 
 
 # Problem 3
@@ -51,14 +59,17 @@ def popcount(n):
 
 
 # Problem 5
-import re
-
-def isIPv4(ip):
-    return re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip) != None
+def isIPv4(s):
+    parts = s.split(".")
+    if len(parts) != 4:
+        return False
+    for item in parts:
+        if not 0 <= int(item) <= 255:
+            return False
+    return True
 
 
 # Problem 6
-
 def fibonacci(n):
     return functools.reduce(lambda x, n: [x[1], x[0] + x[1]], range(n), [0, 1])[0]
 
