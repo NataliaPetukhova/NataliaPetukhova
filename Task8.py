@@ -38,10 +38,7 @@ class LinkedQueue:
 
     def push(self, elem):
         """ Pushes 'elem' to queue """
-        if elem not in self.items:
-            self.items.append(elem)
-            return True
-        return False
+        return self.items.append(elem)
 
         
     def pop(self):
