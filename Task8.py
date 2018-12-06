@@ -34,18 +34,28 @@ class LinkedQueue:
         self.enter = None
         self.out = None
         self.size = 0
-        self.items = []
+
 
     def push(self, elem):
         """ Pushes 'elem' to queue """
+        if not self.size:
+            self.enter = QueueNode(elem, None)
+            self.out = self.enter
+            self.size = 1
+        else:
+            new_node = QueueNode(elem, None)
+            self.enter.next = new_node
+            self.enter = new_node
+            self.size += 1
         return self.items.append(elem)
 
         
     def pop(self):
         """ Removes front of queue and returns it """
-        if len(self.items) <= 0:
-            return ("List Empty!")
-        return self.items.pop()
+        out = self.out.value
+        self.out = self.out.next
+        self.size -= 1
+        return out
 
 
     def front(self):
