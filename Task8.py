@@ -5,7 +5,7 @@ class QueueNode:
         """ Initializes new node """
         self.item = elem
         self.next = nextnode
-        
+
 
 class QueueIterator:
     """ QueueIterator: Iterator for LinkedQueue """
@@ -14,6 +14,8 @@ class QueueIterator:
         """ Initializes new Iterator """
         self.current = node
         self.size = count
+
+
     def __next__(self):
         """ Returns next element of queue: next(iter) """
         if self.size == 0:
@@ -23,7 +25,6 @@ class QueueIterator:
             self.current = self.current.next
             self.size -= 1
             return current
-
 
 
 class LinkedQueue:
@@ -47,12 +48,11 @@ class LinkedQueue:
             self.enter.next = new_node
             self.enter = new_node
             self.size += 1
-        return self.items.append(elem)
 
-        
+
     def pop(self):
         """ Removes front of queue and returns it """
-        out = self.out.value
+        out = self.out.item 
         self.out = self.out.next
         self.size -= 1
         return out
@@ -75,7 +75,8 @@ class LinkedQueue:
 
     def __len__(self):
         """ Returns size of queue: len(queue) """
-        return len(self.items)
+        return self.size 
+
 
     def clear(self):
         """ Makes queue empty """
@@ -83,3 +84,17 @@ class LinkedQueue:
         self.out = None
         self.size = 0
 
+
+def main():
+    q = LinkedQueue()
+    print(q.push(1))
+    print(q.push(2))
+    print(q.push(10))
+    print(len(q))  # 3
+    print(q.pop())  # 1
+    print(q.pop())  # 2
+    print(len(q))  # 1
+    print(q.clear())
+    print(len(q))  # 0
+
+main()
