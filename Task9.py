@@ -169,7 +169,7 @@ if __name__ == '__main__':
     print(path2.getname())
     print(path2.subdirectories())
     print(path2.filesrecursive())
-    print(path2.getsubdirectory("dir2"))
+    print(path2.getsubdirectory("directory"))
     
     
 
