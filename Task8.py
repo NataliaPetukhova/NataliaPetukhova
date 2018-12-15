@@ -60,12 +60,12 @@ class LinkedQueue:
 
     def front(self):
         """ Returns front of queue """
-        return self.out.value
+        return self.out.item
 
 
     def empty(self):
         """ Checks whether queue is empty """
-        return self.front == None
+        return not self.size == None
 
 
     def __iter__(self):
