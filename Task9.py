@@ -20,20 +20,22 @@ class FSItem(object):
                 raise FileSystemError if item does not exist
                 raise FileSystemError if item "newname" already exists '''
         if self.getname() == newname:
-            raise FileSystemError("Item {0} already exists".format(newname))
-        elif not os.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+            if os.path.exists(os.path.join(os.path.split(self.path)[0], newname)):
+                raise FileSystemError("Item {0} already exists".format(newname))
+            elif not os.path.exists(self.path):
+                raise FileSystemError("Item {0} does not exist".format(self.path))
         else:
-            return os.rename(self.path, os.path.join(os.path.dirname(self.path),newname))
+            newpath = os.path.join(os.path.split(self.path)[0], newname)
+            return os.rename(self.path, newpath)
 
 
     def create(self):
         ''' Creates new item in OS
                 raise FileSystemError if item with such path already exists '''
         if os.path.exists(self.path):
-            raise FileSystemError("Item {0} with such path already exists".format(self.getname()))
+            raise FileSystemError("Item {0} with such path already exists".format(self.path))
         else:
-            return os.makedirs(os.path.dirname(self.path))
+            open(self.path, 'a').close()
 
 
     def getname(self):
@@ -66,14 +68,14 @@ class File(FSItem):
                 raise FileSystemError if there exists directory with the same path '''
         self.path = path
         if os.path.isdir(self.path):
-            raise FyleSystemError("Item {0} is a directory".format(self.getname()))
+            raise FyleSystemError("Item {0} is a directory".format(self.path))
 
 
     def __len__(self):
         ''' Returns size of file in bytes
                 raise FileSystemError if file does not exist '''
         if not os.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+            raise FileSystemError("File {0} does not exist".format(self.path))
         else:
             os.path.getsize(self.path)
             
@@ -82,16 +84,16 @@ class File(FSItem):
         ''' Returns list of lines in file (without trailing end-of-line)
                 raise FileSystemError if file does not exist '''
         if not os.path.exists(self.path):
-            raise FileSystemError("File {0}does not exist".format(self.getname()))
+            raise FileSystemError("File {0} does not exist".format(self.path))
         else:
-            return len(self.text(encoding, errors).splitlines(retain))
+            open(self.path, 'r').read().split('\n')
 
 
     def __iter__(self):
         ''' Returns iterator for lines of this file
                 raise FileSystemError if file does not exist '''
         if not os.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+            raise FileSystemError("File {0} does not exist".format(self.path))
         else:
             return iter(self.getcontent())
 
@@ -105,58 +107,66 @@ class Directory(FSItem):
                 raise FileSystemError if there exists file with the same path '''
         self.path = path
         if os.path.isfile(self.path):
-            raise FyleSystemError("Item {0} is a file".format(self.getname()))
+            raise FyleSystemError("Item {0} is a file".format(self.path))
 
 
     def items(self):
         ''' Yields FSItem instances of items inside of current directory
                 raise FileSystemError if current directory does not exists '''
-        if not self.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
-        return os.listdir(self.path)
+        if os.path.exists(self.path):
+            for item in os.listdir(self.path):
+                newpath = os.path.join(self.path, item)
+                if os.path.isfile(newpath):
+                    yield File(newpath)
+                elif os.path.isdir(newpath):
+                    yield Dir(newpath)
+        else:
+            raise FileSystemError("Item {0} does not exist".format(self.path))
 
 
     def files(self):
         ''' Yields File instances of files inside of current directory
                 raise FileSystemError if current directory does not exists '''
-        if not self.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+        if not os.path.exists(self.path):
+            raise FileSystemError("File {0} does not exist".format(self.path))
         else:
-            return [f for f in self.items() if File(os.path.join(self.path, f)).isfile()]
+            yield from filter(lambda f: f.isfile(), self.items())
 
 
     def subdirectories(self):
         ''' Yields Directory instances of directories inside of current directory
                 raise FileSystemError if current directory does not exists '''
-        if not self.path.exists(self.path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+        if not os.path.exists(self.path):
+            raise FileSystemError("Subdirectory {0} does not exist".format(self.path))
         else:
-            return next(os.walk(self.path))
+            yield from filter(lambda sd: sd.isdir(), self.items())
 
 
     def filesrecursive(self):
         ''' Yields File instances of files inside of this directory,
                 inside of subdirectories of this directory and so on...
                 raise FileSystemError if directory does not exist '''
-        if not self.path.exists(path):
-            raise FileSystemError("File {0} does not exist".format(self.getname()))
+        if not os.path.exists(path):
+            raise FileSystemError("File {0} does not exist".format(self.path))
         else:
-            return [x for x in os.walk(self.path)]
+            for directories, files in os.walk(self.path):
+                for file in files:
+                    yield os.path.join(self.path, file)
+                for directory in directories:
+                    yield os.path.join(self.path, directory)
 
 
     def getsubdirectory(self, name):
         ''' Returns Directory instance with subdirectory of current directory with name "name"
                 raise FileSystemError if item "name" already exists and item "name" is not directory '''
-        if self.getname() == newname:
-            raise FileSystemError("Item {0} already exists".format(newname))
-        elif not self.path.isdir(self.path):
-            raise FileSystemError("Item {0} is not a directory".format(self.getname()))
+        if os.path.exists(os.path.join(self.path, name)):
+            raise FileSystemError("Item {0} already exists".format(os.path.join(self.path, name)))
+        elif not os.path.isdir(os.path.join(self.path, name)):
+            raise FileSystemError("Item {0} is not directory".format(os.path.join(self.path, name)))
         else:
-            for x in os.listdir(self.path):
-                if os.path.isfile(x.path):
-                    return file(x.path)
-                else:
-                    return dir(x.path)
+            return directory(os.path.join(self.path, name))
+
+        
 
 
 if __name__ == '__main__':
