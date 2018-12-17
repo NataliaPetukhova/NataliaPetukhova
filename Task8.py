@@ -21,7 +21,7 @@ class QueueIterator:
         if self.size == 0:
             raise StopIteration
         else:
-            current = self.current.value
+            current = self.current.item
             self.current = self.current.next
             self.size -= 1
             return current
@@ -52,20 +52,26 @@ class LinkedQueue:
 
     def pop(self):
         """ Removes front of queue and returns it """
-        out = self.out.item 
-        self.out = self.out.next
-        self.size -= 1
-        return out
+        if not self.size:
+            return None
+        else:
+            out = self.out.item
+            self.out = self.out.next
+            self.size -= 1
+            return out
 
 
     def front(self):
         """ Returns front of queue """
-        return self.out.item
+        if not self.size:
+            return None
+        else:
+            return self.out.item
 
 
     def empty(self):
         """ Checks whether queue is empty """
-        return not self.size == None
+        return not self.size
 
 
     def __iter__(self):
@@ -86,15 +92,11 @@ class LinkedQueue:
 
 
 def main():
+
     q = LinkedQueue()
     print(q.push(1))
-    print(q.push(2))
-    print(q.push(10))
-    print(len(q))  # 3
-    print(q.pop())  # 1
-    print(q.pop())  # 2
-    print(len(q))  # 1
-    print(q.clear())
-    print(len(q))  # 0
+    print(q.empty())
+    for x in q:
+        print(x)
 
 main()
